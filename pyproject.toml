@@ -1,0 +1,18 @@
+[tool.poetry]
+name = "mcp-stock-purchase"
+version = "0.1.0"
+description = ""
+authors = ["yagyagoel1 <yagyagoel87@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+kiteconnect = "^5.0.1"
+setuptools = "^79.0.0"
+python-dotenv = "^1.1.0"
+mcp = {extras = ["cli"], version = "^1.6.0"}
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
