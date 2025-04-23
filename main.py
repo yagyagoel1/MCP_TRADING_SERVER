@@ -1,5 +1,5 @@
 from mcp.server.fastmcp import FastMCP
-from .trade import (placeBuyOrder,sellStockOrder)
+from .trade import (placeBuyOrder,sellStockOrder,getAllHoldings,cancelAnOrder)
 # Create an MCP server
 mcp = FastMCP("Demo")
 
@@ -28,3 +28,21 @@ def sellStocks(quantity:int,symbol:str):
     except Exception as e:
         return f"falied to place order error:{e}"
     
+@mcp.tool()
+def getHoldings():
+    """this is to fetch all the holdings for the user in zerodha"""
+    try:
+        data = getAllHoldings()
+        return f"Holdings fetched successfully holdings:{data}"
+    except Exception as e:
+        return f"falied to fetch holdings error:{e}"
+    
+@mcp.tool()
+def cancelOrder(order_id:int):
+    """Cancel all the order with the specified order id"""
+    try:
+        data = cancelAnOrder(order_id)
+        
+        return f"Cancelled the holdings successfully {data}"
+    except Exception as e:
+        return f"failed to cancel the order {e}"

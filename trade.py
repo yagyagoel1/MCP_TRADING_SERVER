@@ -60,7 +60,6 @@ def getAllHoldings():
        return data
     except Exception as e:
         return f"failed to retreive holdings error:{e}" 
-getAllHoldings()
 
 
 
