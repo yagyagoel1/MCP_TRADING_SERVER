@@ -30,8 +30,10 @@ def placeBuyOrder(symbol,quantity=1):
                                     validity=kite.VALIDITY_DAY)
 
         logging.info("Order placed. ID is: {}".format(order_id))
+        return order_id
     except Exception as e:
         logging.info("Order placement failed: {}".format(e))
+        raise e
           
         
         
@@ -47,11 +49,18 @@ def sellStockOrder(symbol,quantity=1):
                                     product=kite.PRODUCT_CNC,
                                     validity=kite.VALIDITY_DAY)
         logging.info("Order not placed sucessfully with the id {}".format(order_id))
+        return order_id
     except Exception as e:
-        logging.info("Order placement failed: {}".format(e.message))
+        logging.info("Order placement failed: {}".format(e))
+        raise e
 
 
-
+def getallOrders():
+    try:
+        data = kite.orders()
+        return data
+    except Exception as e:
+        return f"failed to retreive orders error:{e}"
         
 def getAllHoldings():
     try:
@@ -71,41 +80,24 @@ def cancelAnOrder(order_id):
     except Exception as e:
         return f"falied to cancel the order error:{e}"
     
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-# cancelAnOrder(250423001989219)
-# Fetch all orders
-data = kite.orders()
-print(type(data))
-print(data)
 
-data = kite.profile()
-print(data)
-# Get instruments
-kite.instruments()
+if __name__ == "__main__":
+    data = kite.orders()
 
-# # Place an mutual fund order
-# kite.place_mf_order(
-#     tradingsymbol="INF090I01239",
-#     transaction_type=kite.TRANSACTION_TYPE_BUY,
-#     amount=5000,
-#     tag="mytag"
-# )
+    data = kite.profile()
+    # Get instruments
+    kite.instruments()
 
-# Cancel a mutual fund order
-# kite.cancel_mf_order(order_id="order_id")
+    # # Place an mutual fund order
+    # kite.place_mf_order(
+    #     tradingsymbol="INF090I01239",
+    #     transaction_type=kite.TRANSACTION_TYPE_BUY,
+    #     amount=5000,
+    #     tag="mytag"
+    # )
 
-# Get mutual fund instruments
-kite.mf_instruments()
+    # Cancel a mutual fund order
+    # kite.cancel_mf_order(order_id="order_id")
+
+    # Get mutual fund instruments
+    kite.mf_instruments()

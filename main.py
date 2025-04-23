@@ -1,15 +1,24 @@
 from mcp.server.fastmcp import FastMCP
-from .trade import (placeBuyOrder,sellStockOrder,getAllHoldings,cancelAnOrder)
-# Create an MCP server
+from trade import (placeBuyOrder,sellStockOrder,getAllHoldings,cancelAnOrder,getallOrders)
+import sys
+
+
 mcp = FastMCP("Demo")
 
 
-# Add an addition tool
 @mcp.tool()
 def add(a: int, b: int) -> int:
     """Add two numbers"""
     return a + b
 
+@mcp.tool()
+def getOrders():
+    """Get all the orders from zerodha"""
+    try:
+        data = getallOrders()
+        return f"Orders fetched successfully {data}"
+    except Exception as e:
+        return f"failed to fetch orders error:{e}"
 @mcp.tool()
 def placeBuyStockOrder(quantity:int,symbol:str):
     """Place a order on zerodha of the defined quantity for the symbol"""
@@ -46,3 +55,9 @@ def cancelOrder(order_id:int):
         return f"Cancelled the holdings successfully {data}"
     except Exception as e:
         return f"failed to cancel the order {e}"
+
+# Start the MCP server
+if __name__ == "__main__":
+    print("Starting MCP Trading Server...", file=sys.stderr)
+    mcp.run(transport='stdio')
+    print("Server is running.", file=sys.stderr)
