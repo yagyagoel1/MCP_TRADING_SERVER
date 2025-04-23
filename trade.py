@@ -14,8 +14,9 @@ print(kite.login_url())
 # Once you have the request_token, obtain the access_token
 # as follows.
 
-data = kite.generate_session("Cru3Mg74MOnmkdkTuOTkw5vgBwgfn6Fr", api_secret=os.getenv("API_SECRET"))
-kite.set_access_token(data["access_token"])
+# data = kite.generate_session("260nWLEW1NKrvYtLZDjcVvv5ib5vyV3S", api_secret=os.getenv("API_SECRET"))
+# print(data["access_token"])
+kite.set_access_token(os.getenv("ACCESS_TOKEN"))
 
 
 def placeBuyOrder(symbol,quantity=1):
@@ -32,8 +33,9 @@ def placeBuyOrder(symbol,quantity=1):
 
         logging.info("Order placed. ID is: {}".format(order_id))
     except Exception as e:
-        logging.info("Order placement failed: {}".format(e.message))
-        
+        logging.info("Order placement failed: {}".format(e))
+     
+# placeBuyOrder("IDEA",1)   
 def sellStockOrder(symbol,quantity=1):
     try:
         order_id = kite.place_order(tradingsymbol=symbol,
@@ -48,11 +50,24 @@ def sellStockOrder(symbol,quantity=1):
     except Exception as e:
         logging.info("Order placement failed: {}".format(e.message))
         
+def getAllHoldings():
+    try:
+       data =  kite.holdings()
+       return data
+    except Exception as e:
+        return f"failed to retreive holdings error:{e}" 
+# getAllHoldings()
+def cancelAnOrder(order_id):
+    try:
+        data = kite.cancel_order(kite.VARIETY_AMO,order_id)
+        return f"order cancelled successfully{data}"
+    except Exception as e:
+        return f"falied to cancel the order error:{e}"
+# cancelAnOrder(250423001989219)
 # Fetch all orders
 data = kite.orders()
 print(type(data))
 print(data)
-print(dict(data))
 
 data = kite.profile()
 print(data)
