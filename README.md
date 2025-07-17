@@ -1,72 +1,85 @@
-# 🛠️ MCP Trading Server
+#  MCP Zerodha Trading Server
 
-A Model Context Protocol (MCP) server tailored for stock traders. Exposes tools for in-depth market analysis and risk-informed trading strategies.
+An MCP (Model Context Protocol) server for executing and managing stock trades on **Zerodha**. Exposes tools for placing orders, checking holdings, and managing trades through a programmable interface.
 
 ---
 
 ## 📦 Features
 
-### 1. Technical Analysis Tools
+### ✅ Trading Operations via Zerodha
 
-* `analyze-stock`
+All tools are accessible using the MCP protocol through CLI or HTTP transport.
 
-  * Input: `symbol` (e.g., `"NVDA"`)
-  * Output: 20/50/200‑day SMAs, RSI, MACD, ATR, ADRP, volume analysis.
-* `relative-strength`
+#### `placeBuyStockOrder`
 
-  * Input: `symbol` (required), `benchmark` (optional, default: `"SPY"`)
-  * Output: Multi‑timeframe (21/63/126/252 days) relative performance metrics.
-* `volume-profile`
+Place a **buy order** for a given stock symbol and quantity.
 
-  * Input: `symbol` (required), `lookback_days` (optional, default: 60)
-  * Output: Volume distribution analysis: Point of Control (POC), Value Area (70%), top volume levels.
-* `detect-patterns`
+```json
+Input: { "symbol": "TATAMOTORS", "quantity": 10 }
+Output: "Order buy placed successfully ..."
+```
 
-  * Input: `symbol`
-  * Output: Chart patterns (e.g., head & shoulders, flags) with confidence scores & targets.
-* `position-size`
+#### `sellStocks`
 
-  * Input: `symbol`, `stop_price`, `risk_amount`, `account_size`, (`price` defaults to current)
-  * Output: Optimal position sizing, dollar risk, profit targets.
-* `suggest-stops`
+Place a **sell order** for a given stock symbol and quantity.
 
-  * Input: `symbol`
-  * Output: Recommended stop-loss levels: ATR multiples, fixed percentage thresholds, key MA/swing levels.
+```json
+Input: { "symbol": "RELIANCE", "quantity": 5 }
+Output: "Order sell placed successfully ..."
+```
+
+#### `getOrders`
+
+Fetch all orders from your Zerodha account.
+
+```json
+Output: "Orders fetched successfully ..."
+```
+
+#### `getHoldings`
+
+Retrieve all current holdings from your Zerodha account.
+
+```json
+Output: "Holdings fetched successfully ..."
+```
+
+#### `cancelOrder`
+
+Cancel a specific order by `order_id`.
+
+```json
+Input: { "order_id": 123456 }
+Output: "Cancelled the order successfully ..."
+```
+
+#### `add`
+
+A sample utility tool to add two integers (demo/test purpose).
+
+```json
+Input: { "a": 5, "b": 10 }
+Output: 15
+```
 
 ---
 
-## 🧠 Powered by Analysis Modules
+## 🧠 Backed By
 
-* **TechnicalAnalysis** — Implements SMA, RSI, MACD, ATR, ADRP, volume trends.
-* **RelativeStrength** — Provides benchmark comparisons across multiple timeframes.
-* **VolumeProfile** — Analyzes price-level volume distribution, POC, and Value Area.
-* **PatternRecognition** — Detects classical chart configurations with confidence estimates.
+* **Zerodha Kite Connect** — For real-time order placement, portfolio insights, and trading actions.
+* **FastMCP** — Lightweight MCP server framework for tool-based workflows.
 
 ---
 
-## 📐 Data & Integration
+## 🧪 Quick Start
 
-* **Data Source**: Tiingo API — OHLCV data, adjusted daily prices, 1-year history by default.
-* **Server Interface**: Supports both CLI and HTTP Modes via `uv`:
-
-  * `uv run mcp-trading-server`
-  * HTTP server at `http://localhost:8000`
-
-    * `GET /list-tools`
-    * `POST /call-tool`
-
----
-
-## ✅ Quick Start Guide
-
-### Prerequisites
+### 🧰 Requirements
 
 * Python 3.11+
-* `uv` runtime
-* `ta-lib`
-* Tiingo API key
+* MCP runtime (FastMCP)
+* Zerodha trading credentials setup in your environment (handled inside `trade.py`)
 
-### Setup
+### 📦 Setup
 
 ```bash
 git clone https://github.com/yagyagoel1/MCP_TRADING_SERVER.git
@@ -74,80 +87,55 @@ cd MCP_TRADING_SERVER
 pip install -r requirements.txt
 ```
 
-Create `.env`:
+Make sure your `trade.py` file has access to Zerodha API keys and session setup.
 
-```
-TIINGO_API_KEY=your_api_key_here
-```
+---
 
-### Run the Server
+## 🚀 Run the Server
 
-**CLI mode:**
+CLI Mode (via stdio):
 
 ```bash
-uv run mcp-trading-server
+python mcp_trading_server.py
 ```
 
-**HTTP mode:**
+Or with `uv` and HTTP:
 
 ```bash
-uv run mcp-trading-server --http
+uv run mcp_trading_server.py --http
 ```
 
 ---
 
-## 🧪 Usage Examples
-
-Run a tool with JSON-RPC or cURL:
+## 📤 Calling Tools (Example via cURL)
 
 ```bash
 curl -X POST http://localhost:8000/call-tool \
   -H "Content-Type: application/json" \
   -d '{
-    "name": "analyze-stock",
-    "arguments": {
-      "symbol": "AAPL"
-    }
+    "name": "getHoldings",
+    "arguments": {}
   }'
 ```
 
-Expect output including trend direction, momentum, volatility, and volume insights.
+---
+
+## 🔍 Use Cases
+
+* Place buy/sell orders programmatically.
+* Cancel specific open orders via tool call.
+* Automate trading via MCP-compatible LLM agents or chat interfaces.
+* Integrate with bots or portfolio dashboards.
 
 ---
 
-## 🐞 Debugging & Inspection
+## 🤝 Contributing
 
-Use the MCP Inspector via `smithery`:
-
-```bash
-npx @modelcontextprotocol/inspector uv --directory .
-```
-
-Helps you introspect calls and responses for each tool.
-
----
-
-## 📈 Practical Use Cases
-
-* Automate analysis with LLM-powered workflows.
-* Use within trading dashboards or chatbots.
-* Integrate into portfolio monitoring or algorithmic trading systems.
-
----
-
-## 🤝 Contribution & Support
-
-Contributions are welcome—from bug reports to feature enhancements. Please open an issue or pull request. For deeper questions, I’m available for chat or email.
+Feature requests, bug reports, and PRs are welcome! Just open an issue or contact me directly.
 
 ---
 
 ## 📄 License
 
-[MIT License](./LICENSE) — free to use, modify, and distribute.
-
----
-
-### 🎯 Final Notes
-
-This server integrates robust technical and quantitative tools with the flexibility of MCP, enabling seamless integration into AI-driven trading strategies and platforms.
+[MIT License](./LICENSE) — free to use and modify.
 
